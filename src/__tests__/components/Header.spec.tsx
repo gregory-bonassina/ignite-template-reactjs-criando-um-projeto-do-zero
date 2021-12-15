@@ -7,41 +7,41 @@ const mockedPush = jest.fn();
 let RouterWrapper;
 
 describe('Header', () => {
-  beforeAll(() => {
-    mockedPush.mockImplementation(() => Promise.resolve());
-    const MockedRouterContext = RouterContext as React.Context<unknown>;
-    RouterWrapper = ({ children }): JSX.Element => {
-      return (
-        <MockedRouterContext.Provider
-          value={{
-            push: mockedPush,
-          }}
-        >
-          {children}
-        </MockedRouterContext.Provider>
-      );
-    };
-  });
-
-  it('should be able to render logo', () => {
-    render(<Header />);
-
-    screen.getByAltText('logo');
-  });
-
-  it('should be able to navigate to home page after a click', () => {
-    render(<Header />, {
-      wrapper: RouterWrapper,
+    beforeAll(() => {
+        mockedPush.mockImplementation(() => Promise.resolve());
+        const MockedRouterContext = RouterContext as React.Context<unknown>;
+        RouterWrapper = ({ children }): JSX.Element => {
+            return (
+                <MockedRouterContext.Provider
+                    value={{
+                        push: mockedPush,
+                    }}
+                >
+                    {children}
+                </MockedRouterContext.Provider>
+            );
+        };
     });
 
-    const secondLink = screen.getByAltText('logo');
+    it('should be able to render logo', () => {
+        render(<Header />);
 
-    fireEvent.click(secondLink);
+        screen.getByAltText('logo');
+    });
 
-    expect(mockedPush).toHaveBeenCalledWith(
-      '/',
-      expect.anything(),
-      expect.anything()
-    );
-  });
+    it('should be able to navigate to home page after a click', () => {
+        render(<Header />, {
+            wrapper: RouterWrapper,
+        });
+
+        const secondLink = screen.getByAltText('logo');
+
+        fireEvent.click(secondLink);
+
+        expect(mockedPush).toHaveBeenCalledWith(
+            '/',
+            expect.anything(),
+            expect.anything()
+        );
+    });
 });
