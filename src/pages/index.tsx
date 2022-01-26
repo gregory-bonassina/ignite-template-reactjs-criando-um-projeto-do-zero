@@ -111,12 +111,18 @@ export default function Home({ postsPagination }: HomeProps): JSX.Element {
     );
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getStaticProps: GetStaticProps = async ({
+    preview = false,
+    previewData,
+}) => {
     const prismic = getPrismicClient();
 
     const response = await prismic.query(
         [Prismic.predicates.at('document.type', 'posts')],
-        { pageSize: 1 }
+        {
+            pageSize: 1,
+            ref: previewData?.ref ?? null,
+        }
     );
 
     const posts: Post[] = parseResult(response.results);
@@ -127,6 +133,7 @@ export const getStaticProps: GetStaticProps = async () => {
                 next_page: response.next_page,
                 results: posts,
             },
+            preview,
         },
         revalidate: 60 * 60 * 24, // 24 hours
     };
